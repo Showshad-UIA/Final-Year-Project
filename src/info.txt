@@ -1,0 +1,6 @@
+add important package
+
+- npm install react-router-dom
+- npm install framer-motion
+- npm install react-firebase
+- npm install react-icons
