@@ -2,7 +2,7 @@ import React from "react";
 import logo from "../img/logo.png";
 import cart from "../img/cart-plus-solid.png";
 import { motion } from "framer-motion";
-
+import "./Header.css";
 import avator from "../img/avatar.png";
 import { Link } from "react-router-dom";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
@@ -25,7 +25,7 @@ const Header = () => {
 		// });
 	};
 	return (
-		<header className=" fixed z-50 w-screen  p-6 px-16">
+		<header className=" header fixed z-50 w-screen bg-green p-6 px-16">
 			<div className="hidden md:flex w-full items-center justify-between p-4">
 				<Link to="/" className="flex items-center gap-2">
 					<img className="w-8 object-cover" src={logo} alt="logo" />
@@ -42,6 +42,9 @@ const Header = () => {
 						</li>
 						<li className=" text-base text-textColor hover:text-headingColor duration-100 transition-all ease-in-out cursor-pointer">
 							Blog
+						</li>
+						<li className=" text-base text-textColor hover:text-headingColor duration-100 transition-all ease-in-out cursor-pointer">
+							CreateItem
 						</li>
 						<li className=" text-base text-textColor hover:text-headingColor duration-100 transition-all ease-in-out cursor-pointer">
 							Product
