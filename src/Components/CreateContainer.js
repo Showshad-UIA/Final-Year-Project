@@ -15,6 +15,7 @@ import {
 	uploadBytesResumable,
 } from "firebase/storage";
 import { storage } from "../firebase.config";
+import { saveItem } from "./Utls/FirebaseFunction";
 
 const catagories = [
 	{
@@ -110,7 +111,55 @@ const CreateContainer = () => {
 			}, 4000);
 		});
 	};
-	const saveDetails = () => {};
+	const saveDetails = () => {
+		setIsLoading(true);
+		try {
+			if (!title || !calories || !imageAsset || !price || !catagory) {
+				setFieldes(true);
+				setMsg("Pls Required the field ");
+				setAlertStatus("danger");
+				setTimeout(() => {
+					setFieldes(false);
+					setIsLoading(false);
+				}, 4000);
+			} else {
+				const data = {
+					id: `${Date.now()}`,
+					title: title,
+					imageUrl: imageAsset,
+					catagory: catagory,
+					calories: calories,
+					qty: 1,
+					price: price,
+				};
+				saveItem(data);
+				setIsLoading(false);
+				setFieldes(true);
+				clearData();
+				setMsg("Data has been uploaded ");
+				setAlertStatus("success");
+				setTimeout(() => {
+					setFieldes(false);
+				}, 4000);
+			}
+		} catch (error) {
+			console.log(error);
+			setFieldes(true);
+			setMsg("Error while uploading");
+			setAlertStatus("danger");
+			setTimeout(() => {
+				setFieldes(false);
+				setIsLoading(false);
+			}, 4000);
+		}
+	};
+	const clearData = () => {
+		setTitle("");
+		setImageAsset(null);
+		setCalories("");
+		setPrice("");
+		setCalories("selected Category");
+	};
 
 	return (
 		<div className="w-full min-h-screen flex items-center justify-center">
