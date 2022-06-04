@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { MdFastfood } from "react-icons/md";
+import { MdFastfood, MdCloudUpload } from "react-icons/md";
+import Loader from "./Loader";
 
 const catagories = [
 	{
@@ -93,6 +94,29 @@ const CreateContainer = () => {
 								</option>
 							))}
 					</select>
+				</div>
+				{/* show the product here */}
+				<div className="group flex justify-center items-center flex-col border-2 border-dotted border-gray-300 w-full h-225 cursor-pointer  h-96 rounded-lg">
+					{isLoading ? (
+						<Loader></Loader>
+					) : (
+						<>
+							{!imageAsset ? (
+								<>
+									<label className="h-full w-full flex flex-col items-center justify-center cursor-pointer ">
+										<div className="h-full w-full flex flex-col items-center justify-center">
+											<MdCloudUpload className="text-gray-500 text-3xl  hover:text-gray-700"></MdCloudUpload>
+											<p className="text-gray-500  hover:text-red-700">
+												click here to upload
+											</p>
+										</div>
+									</label>
+								</>
+							) : (
+								<></>
+							)}
+						</>
+					)}
 				</div>
 			</div>
 		</div>

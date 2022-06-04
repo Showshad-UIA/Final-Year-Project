@@ -25,8 +25,8 @@ const Header = () => {
 		// });
 	};
 	return (
-		<header className=" header fixed z-50 w-screen bg-green p-6 px-16">
-			<div className="hidden md:flex w-full items-center justify-between p-4">
+		<header className=" header fixed  z-50 h-24 w-screen bg-green p-6 px-16">
+			<div className="hidden md:flex w-full items-center justify-between p-2">
 				<Link to="/" className="flex items-center gap-2">
 					<img className="w-8 object-cover" src={logo} alt="logo" />
 					<p className="text-headingColor text-xl font-bold">Fresh Goods App</p>
