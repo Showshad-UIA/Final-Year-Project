@@ -1,7 +1,20 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { MdFastfood, MdCloudUpload } from "react-icons/md";
+import {
+	MdFastfood,
+	MdCloudUpload,
+	MdDelete,
+	MdFoodBank,
+	MdAttachMoney,
+} from "react-icons/md";
 import Loader from "./Loader";
+import {
+	deleteObject,
+	getDownloadURL,
+	ref,
+	uploadBytesResumable,
+} from "firebase/storage";
+import { storage } from "../firebase.config";
 
 const catagories = [
 	{
@@ -46,6 +59,58 @@ const CreateContainer = () => {
 	const [alertStatus, setAlertStatus] = useState("danger");
 	const [msg, setMsg] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
+
+	const uploadImage = (e) => {
+		setIsLoading(true);
+		const imageFile = e.target.files[0];
+		const storageRef = ref(storage, `Images/${Date.now()}-${imageFile.name}`);
+		const uploadTask = uploadBytesResumable(storageRef, imageFile);
+		uploadTask.on(
+			"state_changed",
+			(snapshot) => {
+				const uploadProgress =
+					(snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+			},
+			(error) => {
+				console.log(error);
+				setFieldes(true);
+				setMsg("Error while uploading");
+				setAlertStatus("danger");
+				setTimeout(() => {
+					setFieldes(false);
+					setIsLoading(false);
+				}, 4000);
+			},
+
+			() => {
+				getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+					setImageAsset(downloadURL);
+					setIsLoading(false);
+					setFieldes(true);
+					setMsg("image uploaded successfully");
+					setAlertStatus("success");
+					setTimeout(() => {
+						setFieldes(false);
+					}, 4000);
+				});
+			}
+		);
+	};
+	const deleteImage = () => {
+		setIsLoading(true);
+		const deleteRef = ref(storage, imageAsset);
+		deleteObject(deleteRef).then(() => {
+			setImageAsset(null);
+			setIsLoading(false);
+			setFieldes(true);
+			setMsg("image deleted ");
+			setAlertStatus("success");
+			setTimeout(() => {
+				setFieldes(false);
+			}, 4000);
+		});
+	};
+	const saveDetails = () => {};
 
 	return (
 		<div className="w-full min-h-screen flex items-center justify-center">
@@ -110,13 +175,68 @@ const CreateContainer = () => {
 												click here to upload
 											</p>
 										</div>
+										<input
+											type="file"
+											name="UploadImage"
+											accept="image/*"
+											onChange={uploadImage}
+											className="w-0 h-0 "
+										/>
 									</label>
 								</>
 							) : (
-								<></>
+								<>
+									<div className="relative h-full">
+										<img
+											src={imageAsset}
+											alt="uploaded img"
+											className="w-full h-full object-cover"
+										/>
+										<button
+											type="button"
+											className="absolute bottom-3 right-3 p-3 rounded-full bg-red-500 text-xl cursor-pointer outline-none hover:shadow-md duration-500 transition-all ease-in-out"
+											onClick={deleteImage}
+										>
+											<MdDelete className="text-white"></MdDelete>
+										</button>
+									</div>
+								</>
 							)}
 						</>
 					)}
+				</div>
+				<div className=" w-full flex flex-col md:flex-row items-center gap-3">
+					<div className="w-full py-2 border-b border-gray-300 flex items-center gap-2 ">
+						<MdFoodBank className="text-gray-700 text-2xl"></MdFoodBank>
+						<input
+							type="text"
+							required
+							value={calories}
+							onChange={(e) => setCalories(e.target.value)}
+							placeholder="calories"
+							className="w-full  h-fill text-lg bg-transparent outline-none border-none placeholder:text-gray-400 text-textColor"
+						/>
+					</div>
+					<div className="w-full flex py-2 border-b border-gray-300 items-center gap-2 ">
+						<MdAttachMoney className="text-gray-700 text-2xl"></MdAttachMoney>
+						<input
+							type="text"
+							required
+							value={price}
+							onChange={(e) => setPrice(e.target.value)}
+							placeholder="Price"
+							className="w-full h-fill text-lg bg-transparent outline-none border-none placeholder:text-gray-400 text-textColor"
+						/>
+					</div>
+				</div>
+				<div className="flex items-center w-full ">
+					<button
+						type="button"
+						className="ml-0 md:ml-auto w-full md:w-auto border-none outline-none bg-emerald-500 px-12 py-2 rounded-lg text-lg text-white font-semibold"
+						onClick={saveDetails}
+					>
+						Save
+					</button>
 				</div>
 			</div>
 		</div>
